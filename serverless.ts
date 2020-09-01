@@ -1,4 +1,6 @@
-import { Serverless } from 'serverless/aws';
+import { Serverless, Functions } from 'serverless/aws';
+import * as fs from 'fs';
+// import * as path from 'path';
 
 const serverlessConfiguration: Serverless = {
   service: {
@@ -29,24 +31,25 @@ const serverlessConfiguration: Serverless = {
     apiGateway: {
       minimumCompressionSize: 1024,
     },
+
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
     },
   },
 
-  functions: {
-    hello: {
-      handler: 'handler.hello',
-      events: [
-        {
-          http: {
-            method: 'get',
-            path: 'hello',
-          }
-        }
-      ]
+  functions: ((): Functions => {
+    const functions: Functions = {};
+
+    for (const file of fs.readdirSync('functions')) {
+      const collectionFunctions = require(`./functions/${file}`)?.functionsDeclaration;
+
+      if (collectionFunctions) {
+        Object.assign(functions, collectionFunctions);
+      }
     }
-  }
+
+    return functions;
+  })()
 };
 
 module.exports = serverlessConfiguration;
