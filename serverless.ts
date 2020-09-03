@@ -32,7 +32,7 @@ const serverlessConfiguration: Serverless = {
       minimumCompressionSize: 1024,
     },
 
-    region: "${opt:region, 'eu-east-1'}",
+    region: "${opt:region, 'eu-west-1'}",
     stage: "${opt:stage, 'dev'}",
 
     environment: "${file(config/env.yml):${self:provider.stage}}",
