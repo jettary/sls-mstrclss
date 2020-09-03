@@ -19,11 +19,17 @@ const serverlessConfiguration: Serverless = {
       useWorkerThreads: true,
       httpPort: 3003
     },
+    splitStacks: {
+      perFunction: false,
+      perType: true,
+      perGroupFunction: false
+    }
   },
   // Add the serverless-webpack plugin
   plugins: [
     'serverless-webpack',
-    'serverless-offline'
+    'serverless-offline',
+    'serverless-plugin-split-stacks'
   ],
   provider: {
     name: 'aws',
@@ -32,7 +38,7 @@ const serverlessConfiguration: Serverless = {
       minimumCompressionSize: 1024,
     },
 
-    region: "${opt:region, 'eu-east-1'}",
+    region: "${opt:region, 'eu-west-1'}",
     stage: "${opt:stage, 'dev'}",
 
     environment: "${file(config/env.yml):${self:provider.stage}}",
