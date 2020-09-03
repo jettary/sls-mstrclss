@@ -1,6 +1,5 @@
 import { Serverless, Functions } from 'serverless/aws';
 import * as fs from 'fs';
-// import * as path from 'path';
 
 const serverlessConfiguration: Serverless = {
   service: {
@@ -18,6 +17,7 @@ const serverlessConfiguration: Serverless = {
     'serverless-offline': {
       useChildProcesses: true,
       useWorkerThreads: true,
+      httpPort: 3003
     },
   },
   // Add the serverless-webpack plugin
@@ -32,9 +32,10 @@ const serverlessConfiguration: Serverless = {
       minimumCompressionSize: 1024,
     },
 
-    environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-    },
+    region: "${opt:region, 'eu-east-1'}",
+    stage: "${opt:stage, 'dev'}",
+
+    environment: "${file(config/env.yml):${self:provider.stage}}",
   },
 
   functions: ((): Functions => {
